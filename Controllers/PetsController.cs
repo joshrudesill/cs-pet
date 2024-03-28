@@ -34,30 +34,30 @@ namespace pet_hotel.Controllers
             
             _context.Add(pet);
             _context.SaveChanges();
-            return Ok();
+            return CreatedAtAction(nameof(AddPet), new {id = pet.id}, pet);
         }
         [HttpPut("{id}")]
-        public IActionResult UpdatePet(Pet pet, int id) {
+        public Pet UpdatePet(Pet pet, int id) {
             pet.id = id;
             _context.Update(pet);
             _context.SaveChanges();
-            return Ok();
+            return pet;
         }
         [HttpPut("{id}/checkin")]
-        public IActionResult UpdateCheckin(int id) {
+        public Pet UpdateCheckin(int id) {
             Pet pet = GetByID(id);
             pet.CheckedInAt = DateTime.Now;
             _context.Update(pet);
             _context.SaveChanges();
-            return Ok();
+            return pet;
         }
         [HttpPut("{id}/checkout")]
-        public IActionResult UpdateCheckout(int id) {
+        public Pet UpdateCheckout(int id) {
             Pet pet = GetByID(id);
             pet.CheckedInAt = null;
             _context.Update(pet);
             _context.SaveChanges();
-            return Ok();
+            return pet;
         }
         [HttpDelete("{id}")]
         public IActionResult DeletePet(int id) {
