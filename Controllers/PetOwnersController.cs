@@ -22,9 +22,19 @@ namespace pet_hotel.Controllers
         // occur when the route is missing in this controller
 
         [HttpGet]
-        public IEnumerable<PetOwner> GetPetOwners()
+        public async Task<ActionResult<IEnumerable<PetOwner>>> GetPetOwners()
         {
-            return _context.PetOwner;
+            var ownersWithPetCounts = await _context.PetOwner
+            .Select(owner => new PetOwner
+            {
+                id = owner.id,
+                EmailAddress = owner.EmailAddress,
+                name = owner.name,
+                PetCount = _context.Pet.Count(pet => pet.PetOwnerId == owner.id) // Count of Pets for each owner
+            })
+            .ToListAsync();
+             
+            return Ok(ownersWithPetCounts);
         }
         [HttpGet("{id}")]
         public PetOwner GetByID(int id)
